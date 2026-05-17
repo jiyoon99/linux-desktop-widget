@@ -1,6 +1,16 @@
 # Linux Desktop Widget
 
-Linux 데스크톱 위에 작은 위젯처럼 떠서 Docker, 로컬 서비스, Ollama AI 상태를 실시간으로 확인하는 GTK 앱입니다. 브라우저 대시보드가 아니라 바탕화면에 항상 떠 있는 운영 상태 위젯을 목표로 만들었습니다.
+Linux 데스크톱 위에 작은 위젯처럼 떠서 Docker, 로컬 서비스, Ollama AI 상태를 실시간으로 확인하는 GTK 앱입니다. 브라우저 대시보드나 터미널 명령 없이 개발 환경의 핵심 런타임 상태를 바로 확인하는 개인 생산성 도구입니다.
+
+## Project Summary
+
+| Item | Description |
+| --- | --- |
+| Type | Linux desktop utility |
+| Role | 개인 프로젝트 / 설계, 구현, 문서화 |
+| Goal | Docker, local service, Ollama 상태를 바탕화면 위젯으로 즉시 확인 |
+| Refresh | 3초 간격 자동 갱신 |
+| Platform | GNOME/Linux desktop |
 
 ## Preview
 
@@ -14,7 +24,11 @@ AI       ON   qwen2.5-coder:14b
 drag to move · right click to quit
 ```
 
-## 표시 항목
+## Why I Built This
+
+Docker와 Ollama 기반 로컬 개발 환경에서는 서비스가 켜져 있는지 확인하기 위해 매번 터미널에서 `docker ps`, `systemctl status docker`, `curl localhost:11434` 같은 명령을 실행해야 합니다. 이 프로젝트는 그 반복을 줄이기 위해 만든 작은 데스크톱 위젯입니다.
+
+## Key Features
 
 - Docker: Docker 데몬 응답 여부와 실행 중인 컨테이너 수
 - Local: 현재 호스트와 자주 쓰는 로컬 포트 상태
@@ -22,6 +36,26 @@ drag to move · right click to quit
 - 3초마다 자동 새로고침
 - 테두리 없는 floating widget UI
 - 왼쪽 클릭 드래그 이동, 오른쪽 클릭 종료
+
+## Demo Scenario
+
+Docker가 실행 중이면:
+
+```text
+Docker   ON   v29.5.0 · running 1
+```
+
+Docker service/socket을 중지하면 최대 3초 안에:
+
+```text
+Docker   OFF   Cannot connect to the Docker daemon...
+```
+
+Ollama가 실행 중이고 모델이 설치되어 있으면:
+
+```text
+AI       ON   qwen2.5-coder:14b
+```
 
 ## Tech Stack
 
@@ -31,7 +65,7 @@ drag to move · right click to quit
 - Ollama local API
 - Linux desktop session
 
-## 실행
+## Run
 
 ```bash
 cd ~/projects/linux-desktop-widget
@@ -39,7 +73,7 @@ chmod +x run.sh stop.sh install-autostart.sh
 ./run.sh
 ```
 
-## 닫는 법
+## Stop
 
 위젯 위에서 오른쪽 클릭하면 종료됩니다.
 
@@ -50,7 +84,7 @@ cd ~/projects/linux-desktop-widget
 ./stop.sh
 ```
 
-## 로그인 시 자동 실행
+## Autostart
 
 ```bash
 ./install-autostart.sh
@@ -61,6 +95,14 @@ Ollama 주소를 바꾸려면 실행 전에 환경변수를 지정합니다.
 ```bash
 OLLAMA_BASE_URL=http://localhost:11434 ./run.sh
 ```
+
+## Implementation Notes
+
+- `GLib.timeout_add()`로 주기적인 상태 갱신을 처리합니다.
+- Docker 상태는 `docker info --format` 결과로 판단합니다.
+- Local 상태는 자주 쓰는 포트에 TCP 연결을 시도해서 확인합니다.
+- AI 상태는 Ollama `/api/tags` 응답을 읽어 모델 목록을 표시합니다.
+- 별도 프론트엔드 서버 없이 GTK 네이티브 창으로 동작합니다.
 
 ## Project Structure
 
@@ -73,6 +115,8 @@ linux-desktop-widget/
 └── README.md
 ```
 
-## Portfolio Notes
+## What I Learned
 
-이 프로젝트는 로컬 개발 환경의 핵심 런타임 상태를 빠르게 확인하기 위한 개인 생산성 도구입니다. Docker와 Ollama를 많이 사용하는 Linux 환경에서 터미널이나 브라우저를 열지 않고도 현재 상태를 바로 볼 수 있도록 만들었습니다.
+- Linux desktop session에서 GTK 위젯 창을 유지하는 방식
+- Docker socket activation 때문에 `docker.service`만 꺼도 데몬이 다시 살아날 수 있다는 점
+- 로컬 개발 도구는 기능보다 실행/종료/자동실행 경험이 중요하다는 점
