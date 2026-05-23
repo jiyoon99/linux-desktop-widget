@@ -12,6 +12,25 @@ Linux 데스크톱 위에 작은 위젯처럼 떠서 Docker, 로컬 서비스, O
 | Refresh | 3초 간격 자동 갱신 |
 | Platform | GNOME/Linux desktop |
 
+## For Interviewers
+
+이 저장소는 Linux 개발 환경에서 반복적으로 확인하던 Docker, local port, Ollama 상태를 작은 데스크톱 도구로 바꾼 프로젝트입니다.
+
+| 평가 포인트 | 확인 위치 |
+| --- | --- |
+| Linux desktop app | `widget.py`, GTK 3 / PyGObject |
+| 상태 갱신 구조 | `GLib.timeout_add()` 기반 3초 주기 refresh |
+| Docker 상태 판단 | Docker CLI 응답과 실행 중인 container 수 |
+| Local service 확인 | 자주 쓰는 TCP port 연결 체크 |
+| 실제 사용성 | drag 이동, right click 종료, autostart script |
+
+면접에서 설명할 수 있는 핵심은 다음과 같습니다.
+
+- 터미널 명령 반복을 GUI 위젯으로 줄인 문제 해결 과정
+- UI를 멈추지 않고 주기적으로 상태를 갱신하는 방식
+- Docker service/socket 상태가 단순히 ON/OFF로만 판단되지 않는 이유
+- 작은 로컬 도구도 실행, 종료, 자동 실행 흐름까지 갖춰야 실제로 쓰기 좋다는 점
+
 ## Preview
 
 ```text
