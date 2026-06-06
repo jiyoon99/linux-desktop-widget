@@ -139,3 +139,7 @@ linux-desktop-widget/
 - Linux desktop session에서 GTK 위젯 창을 유지하는 방식
 - Docker socket activation 때문에 `docker.service`만 꺼도 데몬이 다시 살아날 수 있다는 점
 - 로컬 개발 도구는 기능보다 실행/종료/자동실행 경험이 중요하다는 점
+
+## License / 라이선스
+
+MIT License. 자세한 내용은 [LICENSE](LICENSE)를 참고하세요.
